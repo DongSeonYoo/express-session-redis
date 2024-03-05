@@ -2,12 +2,14 @@ import { Application } from 'express';
 import expressLoader from './express';
 import errorHandling from '../../middlewares/error-handling';
 import { NotFoundException } from '../modules/custom-error.module';
+import { sessionConfig } from '../../configs/session.config';
 
 export default function (app: Application) {
   // load global middleware of express
   expressLoader(app);
 
   // another loader... (ex: database loader..)
+  app.use(sessionConfig());
 
   // throw NotFoundException
   app.use((req, res) => {
