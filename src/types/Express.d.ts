@@ -3,7 +3,9 @@ import { SessionData } from 'express-session';
 declare global {
   namespace Express {
     interface Request {
-      user: SessionData;
+      user: {
+        idx: SessionData['userId'];
+      };
     }
   }
 }
