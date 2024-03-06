@@ -9,7 +9,6 @@ export default function (app: Application) {
   expressLoader(app);
 
   // another loader... (ex: database loader..)
-  app.use(sessionConfig());
 
   // throw NotFoundException
   app.use((req, res) => {
