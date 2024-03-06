@@ -7,20 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model account_tb {
-  id         Int       @id @default(autoincrement())
-  name       String    @db.VarChar
-  email      String    @unique @db.VarChar
-  password   String    @db.VarChar
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  post_tb    post_tb[]
+model AccountTb {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar
+  email     String    @unique @db.VarChar
+  password  String    @db.VarChar
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  postTb    PostTb[]
+
+  @@map("account_tb")
 }
 
-model post_tb {
-  id         Int        @id @default(autoincrement())
-  account_id Int
-  title      String     @db.VarChar
-  body       String
-  created_at DateTime?  @default(now()) @db.Timestamp(6)
-  account_tb account_tb @relation(fields: [account_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model PostTb {
+  id        Int       @id @default(autoincrement())
+  accountId Int       @map("account_id")
+  title     String    @db.VarChar
+  body      String
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  accountTb AccountTb @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("post_tb")
 }
