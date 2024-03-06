@@ -6,7 +6,4 @@ declare module 'express-session' {
   }
 
   interface SessionData extends CustomSessionData {}
-  // interface SessionData {
-  //   userId: IAccount['id']
-  // }
 }
