@@ -1,7 +1,7 @@
 import { IAccount } from '../interface/IAccount';
 
 declare module 'express-session' {
-  interface CustomSessionData {
+  export interface CustomSessionData {
     userId: IAccount['id'];
   }
 
