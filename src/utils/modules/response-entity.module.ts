@@ -11,8 +11,8 @@ export class ResponseEntity<T> {
     this.data = data;
   }
 
-  static SUCCESS(message: string = ''): ResponseEntity<string> {
-    return new ResponseEntity<string>(HttpStatus.OK, message, '');
+  static SUCCESS(message: string = ''): ResponseEntity<Object> {
+    return new ResponseEntity<Object>(HttpStatus.OK, message, {});
   }
 
   static SUCCESS_WITH<T>(data: T, message: string = ''): ResponseEntity<T> {
