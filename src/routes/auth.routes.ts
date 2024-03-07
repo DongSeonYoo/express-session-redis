@@ -5,7 +5,6 @@ import { Router } from 'express';
 import { ResponseEntity } from '../utils/modules/response-entity.module';
 import { authService } from '../services';
 import { IAccount } from '../interface/IAccount';
-import { redisClient } from '../database/redis.database';
 import { loginAuthGuard } from '../middlewares/auth-guard';
 
 const authRouter = Router();
@@ -25,6 +24,7 @@ authRouter.post(
     const { userId } = await authService.login(loginInput);
 
     req.session.userId = userId;
+    req.session.loggedInAt = new Date();
 
     return res.send(ResponseEntity.SUCCESS('로그인 성공'));
   }),
