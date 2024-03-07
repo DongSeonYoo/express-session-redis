@@ -13,5 +13,6 @@ export namespace IAccount {
 
   export interface IAccountProfileDetail extends IAccount {}
 
-  export interface ILoggedInUserList extends Pick<IAccount, 'id' | 'name' | 'createdAt'> {}
+  export interface ILoggedInUserList
+    extends Pick<IAccount, 'id' | 'name' | 'email' | 'createdAt'> {}
 }
