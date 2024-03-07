@@ -1,11 +1,8 @@
 import { Router } from 'express';
 import asyncWrap from '../utils/modules/async-wrap.module';
 import { loginAuthGuard } from '../middlewares/auth-guard';
-import { accountService } from '../services';
+import { accountService, authService } from '../services';
 import { ResponseEntity } from '../utils/modules/response-entity.module';
-import { redisClient } from '../database/redis.database';
-import { SessionData } from 'express-session';
-import { BadRequestException } from '../utils/modules/custom-error.module';
 
 const accountRouter = Router();
 
@@ -31,21 +28,24 @@ accountRouter.get(
 accountRouter.get(
   '/logged-in/list',
   asyncWrap(async (req, res, next) => {
-    const getLoggedInUserListInRedis = await redisClient.keys('session:*');
-    const sessionDataList = await Promise.all(
-      getLoggedInUserListInRedis.map((key) => redisClient.get(key)),
+    // load loggedIn userIdx for redis
+    const userIdList = await authService.getLoggedInUserListInRedis();
+
+    // load userInformation for postgres
+    const result = await accountService.getLoggedInUserInfo(userIdList.map((e) => e.userId));
+
+    // send data for redis & data for postgres
+    return res.send(
+      ResponseEntity.SUCCESS_WITH(
+        result.map((e, i) => ({
+          id: e.id,
+          name: e.name,
+          email: e.email,
+          loggedInAt: userIdList[i].loggedInAt,
+          createdAt: e.createdAt,
+        })),
+      ),
     );
-
-    const userIdList: SessionData[] = sessionDataList.map((data) => {
-      if (data) {
-        return JSON.parse(data);
-      }
-    });
-
-    const userIdx = userIdList.map((e) => e.userId);
-    const result = await accountService.getLoggedInUserInfo(userIdx);
-
-    return res.send(ResponseEntity.SUCCESS_WITH(result));
   }),
 );
 

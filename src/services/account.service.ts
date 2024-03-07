@@ -34,7 +34,7 @@ export class AccountService {
     };
   }
 
-  async getLoggedInUserInfo(userIds: number[]) /*: Promise<IAccount.ILoggedInUserList>*/ {
+  async getLoggedInUserInfo(userIds: number[]): Promise<IAccount.ILoggedInUserList[]> {
     const result = await this.prisma.accountTb.findMany({
       where: {
         id: {
