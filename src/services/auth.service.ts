@@ -2,10 +2,12 @@ import { Service } from 'typedi';
 import { Prisma } from '../database/prisma.database';
 import { IAccount } from '../interface/IAccount';
 import { BadRequestException } from '../utils/modules/custom-error.module';
+import { SessionData } from 'express-session';
+import { RedisService } from '../database/redis.database';
 
 @Service()
 export class AuthService {
-  constructor(private readonly prisma: Prisma) {}
+  constructor(private readonly prisma: Prisma, private readonly redisService: RedisService) {}
 
   async login({ email, password }: IAccount.ILogin): Promise<{ userId: number }> {
     const result = await this.prisma.accountTb.findUnique({

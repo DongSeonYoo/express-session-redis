@@ -1,13 +1,13 @@
-import RedisStore from 'connect-redis';
-import { redisClient } from '../database/redis.database';
 import session from 'express-session';
 import env from './env';
+import Container from 'typedi';
+import { RedisService } from '../database/redis.database';
 
-const redisStore = new RedisStore({ client: redisClient, prefix: 'session:', ttl: 1000 * 60 * 5 });
+const redisService = Container.get(RedisService);
 
 export const sessionConfig = () =>
   session({
-    store: redisStore,
+    store: redisService.store,
     secret: env.SESSION_SECRET_KEY,
     resave: false,
     saveUninitialized: false,
