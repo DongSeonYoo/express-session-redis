@@ -23,6 +23,9 @@ authRouter.post(
 
     const { userId } = await authService.login(loginInput);
 
+    // TODO
+    // 중복 로그인 방지 하는 기능
+
     req.session.userId = userId;
     req.session.loggedInAt = new Date();
 
