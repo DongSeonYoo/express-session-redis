@@ -58,4 +58,21 @@ export class AuthService {
       },
     });
   }
+
+  async getLoggedInUserListInRedis(): Promise<Pick<SessionData, 'userId' | 'loggedInAt'>[]> {
+    const getLoggedInUsers = await this.redisService.client.keys('session:*');
+    const sessionDataList: Pick<SessionData, 'userId' | 'loggedInAt'>[] = await Promise.all(
+      getLoggedInUsers
+        .map((key) => this.redisService.client.get(key))
+        .map((data) => data.then((elemenet) => elemenet && JSON.parse(elemenet))),
+    );
+    // const tojsonData: SessionData[] = sessionDataList.map((data) => {
+    //   if (data) {
+    //     return JSON.parse(data);
+    //   }
+    // });
+    // console.log(sessionDataList);
+
+    return sessionDataList;
+  }
 }
