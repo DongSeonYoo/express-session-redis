@@ -27,6 +27,7 @@ accountRouter.get(
  */
 accountRouter.get(
   '/logged-in/list',
+  loginAuthGuard(),
   asyncWrap(async (req, res, next) => {
     // load loggedIn userIdx for redis
     const userIdList = await authService.getLoggedInUserListInRedis();
