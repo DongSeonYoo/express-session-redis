@@ -21,7 +21,7 @@ authRouter.post(
   asyncWrap(async (req, res, next) => {
     const loginInput: IAccount.ILogin = req.body;
 
-    const { userId } = await authService.login(loginInput);
+    const { userId } = await authService.verifyAccount(loginInput);
 
     // TODO
     // 중복 로그인 방지 하는 기능
@@ -45,7 +45,7 @@ authRouter.post(
   asyncWrap(async (req, res, next) => {
     const signupInput: IAccount.ISignup = req.body;
 
-    const createdUserIdx = await authService.signup(signupInput);
+    const createdUserIdx = await authService.registerAccount(signupInput);
 
     return res.send(ResponseEntity.SUCCESS_WITH(createdUserIdx));
   }),

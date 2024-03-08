@@ -9,7 +9,7 @@ import { RedisService } from '../database/redis.database';
 export class AuthService {
   constructor(private readonly prisma: Prisma, private readonly redisService: RedisService) {}
 
-  async login({ email, password }: IAccount.ILogin): Promise<{ userId: number }> {
+  async verifyAccount({ email, password }: IAccount.ILogin): Promise<{ userId: number }> {
     const result = await this.prisma.accountTb.findUnique({
       where: {
         email,
@@ -34,7 +34,7 @@ export class AuthService {
     };
   }
 
-  async signup({ email, name, password }: IAccount.ISignup) {
+  async registerAccount({ email, name, password }: IAccount.ISignup) {
     const duplicateCheck = await this.prisma.accountTb.findUnique({
       where: {
         email,
@@ -74,5 +74,15 @@ export class AuthService {
     // console.log(sessionDataList);
 
     return sessionDataList;
+  }
+
+  async checkExistLoggedInUserInRedis(sessionId: string) {
+    const result = await this.redisService.client.get(sessionId);
+
+    if (!result) {
+      throw new BadRequestException('이미 로그인되어있음');
+    }
+
+    return result;
   }
 }
