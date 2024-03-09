@@ -5,8 +5,8 @@ import RedisStore from 'connect-redis';
 
 @Service()
 export class RedisService {
-  client: IORedis;
-  store: RedisStore;
+  readonly client: IORedis;
+  readonly store: RedisStore;
 
   constructor() {
     this.client = new IORedis(env.REDIS_URL || 'redis://127.0.0.1:6379');
