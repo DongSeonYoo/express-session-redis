@@ -1,6 +1,12 @@
 ## 현재 로그인 한 유저의 목록을 보여주는 기능
 
 ### 사용 기술
+
+#### 템플릿
+[express-prisma-template](https://github.com/DongSeonYoo/express-prisma-template).
+
+
+#### 데이터베이스
 세션 저장을 위한 Key-value 데이터베이스
 - ioredis^5.3.2
 - connect-redis^7.1.1
