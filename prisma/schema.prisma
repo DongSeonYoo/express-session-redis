@@ -12,6 +12,7 @@ model AccountTb {
   name      String    @db.VarChar
   email     String    @unique @db.VarChar
   password  String    @db.VarChar
+  role      Int       @db.SmallInt
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   postTb    PostTb[]
 
