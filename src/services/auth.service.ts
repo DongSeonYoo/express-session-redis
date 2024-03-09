@@ -4,20 +4,25 @@ import { IAccount } from '../interface/IAccount';
 import { BadRequestException } from '../utils/modules/custom-error.module';
 import { SessionData } from 'express-session';
 import { RedisService } from '../database/redis.database';
+import { Role } from '../interface/IRole';
 
 @Service()
 export class AuthService {
   constructor(private readonly prisma: Prisma, private readonly redisService: RedisService) {}
 
-  async verifyAccount({ email, password }: IAccount.ILogin): Promise<{ userId: number }> {
+  async verifyAccount({
+    email,
+    password,
+  }: IAccount.ILogin): Promise<{ userId: number; role: Role }> {
     const result = await this.prisma.accountTb.findUnique({
       where: {
         email,
       },
       select: {
+        id: true,
         email: true,
         password: true,
-        id: true,
+        role: true,
       },
     });
 
@@ -31,10 +36,11 @@ export class AuthService {
 
     return {
       userId: result.id,
+      role: result.role,
     };
   }
 
-  async registerAccount({ email, name, password }: IAccount.ISignup) {
+  async registerAccount({ email, name, password, role }: IAccount.ISignup) {
     const duplicateCheck = await this.prisma.accountTb.findUnique({
       where: {
         email,
@@ -52,6 +58,7 @@ export class AuthService {
         email,
         name,
         password,
+        role,
       },
       select: {
         id: true,

@@ -6,6 +6,7 @@ import { ResponseEntity } from '../utils/modules/response-entity.module';
 import { authService } from '../services';
 import { IAccount } from '../interface/IAccount';
 import { loginAuthGuard } from '../middlewares/auth-guard';
+import { Role } from '../interface/IRole';
 
 const authRouter = Router();
 
@@ -21,12 +22,13 @@ authRouter.post(
   asyncWrap(async (req, res, next) => {
     const loginInput: IAccount.ILogin = req.body;
 
-    const { userId } = await authService.verifyAccount(loginInput);
+    const loginUserResult = await authService.verifyAccount(loginInput);
 
     // TODO
     // 중복 로그인 방지 하는 기능
 
-    req.session.userId = userId;
+    req.session.userId = loginUserResult.userId;
+    req.session.role = loginUserResult.role;
     req.session.loggedInAt = new Date();
 
     return res.send(ResponseEntity.SUCCESS('로그인 성공'));
@@ -41,7 +43,12 @@ authRouter.post(
  */
 authRouter.post(
   '/signup',
-  validate([body('email').notEmpty(), body('password').notEmpty(), body('name').notEmpty()]),
+  validate([
+    body('email').notEmpty(),
+    body('password').notEmpty(),
+    body('name').notEmpty(),
+    body('role').notEmpty().isIn([Role.ADMIN, Role.TEACHER, Role.STUDENT]),
+  ]),
   asyncWrap(async (req, res, next) => {
     const signupInput: IAccount.ISignup = req.body;
 
@@ -63,6 +70,18 @@ authRouter.delete(
     req.session.destroy((e) => e);
 
     return res.send(ResponseEntity.SUCCESS('로그아웃 성공'));
+  }),
+);
+
+/**
+ * GET /auth/role-guard
+ * Check Role
+ */
+authRouter.get(
+  '/role-guard',
+  loginAuthGuard(Role.TEACHER),
+  asyncWrap(async (req, res, next) => {
+    return res.send(ResponseEntity.SUCCESS_WITH('Success'));
   }),
 );
 

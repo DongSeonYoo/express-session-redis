@@ -17,6 +17,7 @@ export class AccountService {
         email: true,
         password: true,
         name: true,
+        role: true,
         createdAt: true,
       },
     });
@@ -30,6 +31,7 @@ export class AccountService {
       email: result.email,
       password: result.password,
       name: result.name,
+      role: result.role,
       createdAt: result.createdAt,
     };
   }
