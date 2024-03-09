@@ -1,9 +1,6 @@
 import session from 'express-session';
 import env from './env';
-import Container from 'typedi';
-import { RedisService } from '../database/redis.database';
-
-const redisService = Container.get(RedisService);
+import { redisService } from '../services';
 
 export const sessionConfig = () =>
   session({
